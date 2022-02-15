@@ -1,4 +1,4 @@
-Age,Education-num,race,sex,Capital-gain,Capital-loss,Hours-per-week,probability!
+Age,Education-num,race,sex,Capital-gain,Capital-loss,Hours-per-week,probability+
 30,13,1,1,2174,0,40,0
 50,13,1,1,0,0,13,0
 30,9,1,1,0,0,40,0

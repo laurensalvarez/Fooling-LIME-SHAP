@@ -1,4 +1,4 @@
-sex,Age_cat,race,Priors_count,c_charge_degree,Decile_score,Priors_count,probability!
+sex,Age_cat,race,Priors_count,c_charge_degree,Decile_score,Priors_count,probability+
 0,45,0,0,1,1,0,1
 0,25,0,0,1,3,0,0
 0,0,0,4,1,4,4,0
