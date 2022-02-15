@@ -1,0 +1,97 @@
+Dump table:
+t.cols
+|  1
+|  |  col: 1
+|  |  hi: -inf
+|  |  lo: inf
+|  |  m2: 0
+|  |  mu: 0
+|  |  n: 0
+|  |  sd: 0
+|  |  name: Age
+|  2
+|  |  col: 2
+|  |  hi: -inf
+|  |  lo: inf
+|  |  m2: 0
+|  |  mu: 0
+|  |  n: 0
+|  |  sd: 0
+|  |  name: Education-num
+|  3
+|  |  col: 3
+|  |  mode: 
+|  |  most: 0
+|  |  n: 0
+|  |  name: race
+|  4
+|  |  col: 4
+|  |  mode: 
+|  |  most: 0
+|  |  n: 0
+|  |  name: sex
+|  5
+|  |  col: 5
+|  |  hi: -inf
+|  |  lo: inf
+|  |  m2: 0
+|  |  mu: 0
+|  |  n: 0
+|  |  sd: 0
+|  |  name: Capital-gain
+|  6
+|  |  col: 6
+|  |  hi: -inf
+|  |  lo: inf
+|  |  m2: 0
+|  |  mu: 0
+|  |  n: 0
+|  |  sd: 0
+|  |  name: Capital-loss
+|  7
+|  |  col: 7
+|  |  hi: -inf
+|  |  lo: inf
+|  |  m2: 0
+|  |  mu: 0
+|  |  n: 0
+|  |  sd: 0
+|  |  name: Hours-per-week
+|  8
+|  |  col: 8
+|  |  mode: 
+|  |  most: 0
+|  |  n: 0
+|  |  name: probability!
+t.my: 
+|  len(cols): 8
+|  y
+|  |  2
+|  |  5
+|  |  6
+|  |  7
+|  |  8
+|  nums
+|  |  1
+|  |  2
+|  |  5
+|  |  6
+|  |  7
+|  syms
+|  |  3
+|  |  4
+|  |  8
+|  w
+|  |  2: -1
+|  |  5: -1
+|  |  6: -1
+|  |  7: -1
+|  x
+|  |  1
+|  |  3
+|  |  4
+|  xnums
+|  |  1
+|  xsyms
+|  |  3
+|  |  4

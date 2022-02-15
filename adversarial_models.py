@@ -12,7 +12,7 @@ from copy import deepcopy
 import shap
 
 class Adversarial_Model(object):
-	"""	A scikit-learn style adversarial explainer base class for adversarial models.  This accetps 
+	"""	A scikit-learn style adversarial explainer base class for adversarial models.  This accepts
 	a scikit learn style function f_obscure that serves as the _true classification rule_ for in distribution
 	data.  Also, it accepts, psi_display: the classification rule you wish to display by explainers (e.g. LIME/SHAP).
 	Ideally, f_obscure will classify individual instances but psi_display will be shown by the explainer.
@@ -31,7 +31,7 @@ class Adversarial_Model(object):
 		self.numerical_cols = None
 
 	def predict_proba(self, X, threshold=0.5):
-		""" Scikit-learn style probability prediction for the adversarial model.  
+		""" Scikit-learn style probability prediction for the adversarial model.
 
 		Parameters
 		----------
@@ -69,7 +69,7 @@ class Adversarial_Model(object):
 		Parameters
 		----------
 		X : np.ndarray
-		
+
 		Returns
 		----------
 		A numpy array containing the binary class predictions.
@@ -77,7 +77,7 @@ class Adversarial_Model(object):
 		pred_probs = self.predict_proba(X)
 		return np.argmax(pred_probs,axis=1)
 
-	def score(self, X_test, y_test):	
+	def score(self, X_test, y_test):
 		""" Scikit-learn style accuracy scoring.
 
 		Parameters:
@@ -103,10 +103,10 @@ class Adversarial_Model(object):
 	def fidelity(self, X):
 		""" Get the fidelity of the adversarial model to the original predictions.  High fidelity means that
 		we're predicting f along the in distribution data.
-		
+
 		Parameters:
 		----------
-		X : np.ndarray	
+		X : np.ndarray
 
 		Returns:
 		----------
@@ -132,7 +132,7 @@ class Adversarial_Lime_Model(Adversarial_Model):
 	def train(self, X, y, feature_names, perturbation_multiplier=30, categorical_features=[], rf_estimators=100, estimator=None):
 		""" Trains the adversarial LIME model.  This method trains the perturbation detection classifier to detect instances
 		that are either in the manifold or not if no estimator is provided.
-		
+
 		Parameters:
 		----------
 		X : np.ndarray of pd.DataFrame
@@ -141,7 +141,7 @@ class Adversarial_Lime_Model(Adversarial_Model):
 		cols : list
 		categorical_columns : list
 		rf_estimators : integer
-		estimaor : func
+		estimator : func
 		"""
 		if isinstance(X, pd.DataFrame):
 			cols = [c for c in X]
@@ -196,9 +196,9 @@ class Adversarial_Kernel_SHAP_Model(Adversarial_Model):
 		super(Adversarial_Kernel_SHAP_Model, self).__init__(f_obscure, psi_display)
 
 	def train(self, X, y, feature_names, background_distribution=None, perturbation_multiplier=10, n_samples=2e4, rf_estimators=100, n_kmeans=10, estimator=None):
-		""" Trains the adversarial SHAP model. This method perturbs the shap training distribution by sampling from 
-		its kmeans and randomly adding features.  These points get substituted into a test set.  We also check to make 
-		sure that the instance isn't in the test set before adding it to the out of distribution set. If an estimator is 
+		""" Trains the adversarial SHAP model. This method perturbs the shap training distribution by sampling from
+		its kmeans and randomly adding features.  These points get substituted into a test set.  We also check to make
+		sure that the instance isn't in the test set before adding it to the out of distribution set. If an estimator is
 		provided this is used.
 
 		Parameters:
@@ -241,7 +241,7 @@ class Adversarial_Kernel_SHAP_Model(Adversarial_Model):
 			for _ in range(X.shape[1]):
 				j = np.random.choice(X.shape[1])
 				point[j] = deepcopy(background_distribution[np.random.choice(background_distribution.shape[0]),j])
-	
+
 			new_instances.append(point)
 
 		substituted_training_data = np.vstack(new_instances)

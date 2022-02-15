@@ -15,7 +15,7 @@ import shap
 from copy import deepcopy
 
 # Flip LIME flag to vary between lime shap
-LIME = False
+LIME = True
 
 # Set up experiment parameters
 params = Params("model_configurations/experiment_params.json")
@@ -41,7 +41,7 @@ categorical_features = [i for i,f in enumerate(features) if f not in ['age', 'le
 #
 # the biased model
 class racist_model_f:
-    # Decision rule: classify negatively if race is black
+    # Decision rule: classify negatively if race is Black
     def predict(self,X):
         return np.array([params.negative_outcome if x[race_indc] > 0 else params.positive_outcome for x in X])
     def predict_proba(self, X):
@@ -76,7 +76,7 @@ def experiment_main(X, y):
 
 	data_dict = {'trial':[], 'yhat':[], 'y':[], 'pct_occur_first':[], 'pct_occur_second':[], 'pct_occur_third':[]}
 
-	trial = 0 
+	trial = 0
 	for n_estimators in [1,2,4,8,16,32,64]:
 		for max_depth in [1,2,4,8,None]:
 			for min_samples_split in [2,4,8,16,32,64]:
@@ -87,7 +87,7 @@ def experiment_main(X, y):
 					adv_lime = Adversarial_Lime_Model(racist_model_f(), innocuous_model_psi()).\
 								train(xtrain, ytrain, estimator=estimator, feature_names=features, perturbation_multiplier=1)
 					adv_explainer = lime.lime_tabular.LimeTabularExplainer(xtrain, feature_names=adv_lime.get_column_names(), discretize_continuous=False)
-					
+
 					formatted_explanations = []
 					for i in range(xtest.shape[0]):
 						exp = adv_explainer.explain_instance(xtest[i], adv_lime.predict_proba).as_list()
@@ -100,10 +100,10 @@ def experiment_main(X, y):
 					background_distribution = shap.kmeans(xtrain,10)
 					adv_shap = Adversarial_Kernel_SHAP_Model(racist_model_f(), innocuous_model_psi()).\
 										train(xtrain, ytrain, estimator=estimator, feature_names=features)
-					
+
 					adv_kerenel_explainer = shap.KernelExplainer(adv_shap.predict, background_distribution)
 					explanations = adv_kerenel_explainer.shap_values(xtest[:100])
-					
+
 					formatted_explanations = []
 					for exp in explanations:
 						formatted_explanations.append([(features[i], exp[i]) for i in range(len(exp))])
@@ -133,8 +133,8 @@ def experiment_main(X, y):
 				data_dict['yhat'] = np.concatenate((data_dict['yhat'], yhat))
 				data_dict['y'] = np.concatenate((data_dict['y'], y))
 				data_dict['pct_occur_first'] = np.concatenate((data_dict['pct_occur_first'], [pct_occur[0] for _ in range(y.shape[0])]))
-				data_dict['pct_occur_second'] = np.concatenate((data_dict['pct_occur_second'], [pct_occur[1] for _ in range(y.shape[0])]))			
-				data_dict['pct_occur_third'] = np.concatenate((data_dict['pct_occur_third'], [pct_occur[2] for _ in range(y.shape[0])]))			
+				data_dict['pct_occur_second'] = np.concatenate((data_dict['pct_occur_second'], [pct_occur[1] for _ in range(y.shape[0])]))
+				data_dict['pct_occur_third'] = np.concatenate((data_dict['pct_occur_third'], [pct_occur[2] for _ in range(y.shape[0])]))
 
 				trial += 1
 
