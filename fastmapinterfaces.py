@@ -5,9 +5,9 @@ import random
 from itertools import count
 
 class Col:
-
-    def __init__(self, name):
-        self.name = name
+    "Summarize symbolic columns."
+    def __init__(self, name): #The __init__ method lets the class initialize the object's attributes and serves no other purpose
+        self.name = name # self is an instance of the class with all of the attributes & methods
 
     def __add__(self,v):
         return v
@@ -30,19 +30,20 @@ class Col:
 
 
 class Sym(Col):
-
-    def __init__(self,name,uid,data=None):
+    "Summarize symbolic columns."
+    def __init__(self,name,uid,data=None): #will override Col inheritance (could use super() to inherit)
         Col.__init__(self,name)
         self.n = 0
         self.most = 0
         self.mode = ""
         self.uid = uid
-        self.cnt = defaultdict(int)
+        self.cnt = defaultdict(int) #will never throw a key error bc it will guve default value as missing key
         if data != None:
             for val in data:
                 self + val
 
     def __add__(self, v):
+        "Update symbol counts in `cnt`, updating `mode` as we go."
         self.n += 1
         self.cnt[v] += 1
         tmp = self.cnt[v]
@@ -52,30 +53,38 @@ class Sym(Col):
         return v
 
     def variety(self):
+        "computes the entropy."
+        # is a measure of the randomness in the information being processed.
+        # The higher the entropy, the harder it is to draw any conclusions from
+        # that information.
         e = 0
         for k, v in self.cnt.items():
             p = v/self.n
             e -= p*math.log(p)/math.log(2)
 
     def xpect(self, j):
+        "compare to what's expected."
         n = self.n + j.n
         return self.n/n * self.variety() + j.n/n * j.variety()
 
     def like(self, x, prior, m):
+        ""
         f = self.cnt[x]
         return (f + m * prior)/(self.n + m)
 
     def mid(self):
+        "Return central tendency of this distribution (using mode)."
         return self.mode
 
     def dist(self, x, y):
+        "Aha's distance between two symbols."
         if (x == "?" or x == "") or (y == "?" or y == ""):
             return 1
         return 0 if x == y else 1
 
 
 class Num(Col):
-
+    "Summarize numeric columns."
     def __init__(self, name, uid, data=None):
         Col.__init__(self, name)
         self.n = 0
@@ -91,6 +100,7 @@ class Num(Col):
                 self + val
 
     def __add__(self, v):
+        #add the column; calculate the new lo/hi, get the sd using the 'chasing the mean'
         self.n += 1
         self.vals.append(v)
         try:
@@ -107,6 +117,11 @@ class Num(Col):
         return v
 
     def _numSd(self):
+        "compute the standard deviation."
+        # Standard deviation is a number that describes how
+        # spread out the values are. A low standard deviation
+        # means that most of the numbers are close to the mean (average) value.
+        # A high standard deviation means that the values are spread out over a wider range.
         if self.m2 < 0:
             return 0
         if self.n < 2:
@@ -114,21 +129,25 @@ class Num(Col):
         return math.sqrt(self.m2/(self.n -1))
 
     def variety(self):
+        "return the standard deviation."
         return self.sd
 
     def xpect(self, j):
+        "compare to what's expected."
         n = self.n + j.n
         return self.n / n * self.variety() + j.n / n * j.variety()
 
     def like(self, x, prior, m):
-        var = sef.sd **2
+        var = self.sd **2
         denom = math.sqrt(math.pi * 2 * var)
         num = (math.e ** (-(x-self.mu)**2)/(2*var+10e-4))
 
     def mid(self):
+        "Return central tendency of this distribution (using average)."
         return self.mu
 
     def dist(self, x, y):
+        "Aha's distance between two nums."
         if (x == "?" or x == "") and (y == "?" or y == ""):
             return 1
         if (x == "?" or x == "") or (y == "?" or y == ""):
@@ -139,6 +158,7 @@ class Num(Col):
         return self._numNorm(x) - self._numNorm(y)
 
     def _numNorm(self, x):
+        "normalize the column." #Min-Max Normalization + a super tiny num so you never divide by 0
         return (x - self.lo)/(self.hi - self.lo + 10e-32)
 
 
@@ -179,8 +199,8 @@ class Table:
         with open(file) as f:
             curline = ""
             for line in f:
-                line = line.strip()
-                if line[len(line) -1] ==",":
+                line = line.strip() #get rid of all the white space
+                if line[len(line) -1] ==",": #if you reach a comma go to the next line
                     curline += line
                 else:
                     curline += line
@@ -193,9 +213,9 @@ class Table:
         lines = []
         for line in src:
             line = line.strip()
-            line = re.sub(doomed, '', line)
+            line = re.sub(doomed, '', line) # uses regular exp package to replace substrings in strings
             if line:
-                lines.append(line.split(sep))
+                lines.append(line.split(sep)) #put the good string back together
         return lines
 
     def __add__(self, line):
